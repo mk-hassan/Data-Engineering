@@ -4,8 +4,8 @@ import pandas as pd
 
 from sqlalchemy import create_engine
 
-GREEN_TAXI_TRIP_DATA = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-01.csv.gz"
-TAXI_ZONES_DATA = "https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv"
+GREEN_TAXI_TRIP_DATA = "wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-10.csv.gz"
+TAXI_ZONES_DATA = "wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv"
 
 GREEN_TAXI_TRIP_DATA_OUTPUT = "./taxiData/green_taxi_data.csv.gz"
 TAXI_ZONES_DATA_OUTPUT = "./taxiData/taxi_zones.csv"

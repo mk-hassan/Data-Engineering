@@ -4,165 +4,75 @@
 and practice with Docker and SQL`
 
 
-## Question 1. Knowing docker tags
+## Question 1. Understanding docker first run
 
-Run the command to get information on Docker 
+Run the command 
+```shell
+>>> docker run -it --entrypoint bash python:3.12.8
+>>> pip --version
+```
+**Solution :** `24.3.1`
 
-```docker --help```
+## Question 2. Understanding Docker networking and docker-compose
 
-Now run the command to get help on the "docker build" command
+**Solution :** `db:5432` 
 
-Which tag has the following text? - *Write the image ID to the file* 
+## Question 3. Trip Segmentation Count
 
-- `--imageid string`
-- `--iidfile string`
-- `--idimage string`
-- `--idfile string`
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 1. Solution </h2>
-
-Which tag has the following text? - *Write the image ID to the file* 
-
-- `--iidfile string`
-
-![docker build --help](./images/question1.png)
-
-<hr>
-
-## Question 2. Understanding docker first run 
-
-Run docker with the python:3.9 image in an interactive mode and the entrypoint of bash.
-Now check the python modules that are installed ( use pip list). 
-How many python packages/modules are installed?
-
-- 1
-- 6
-- 3
-- 7
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 2. Solution </h2>
-
-How many python packages/modules are installed?
-
-- `3`
-
-![docker build --help](./images/question2.png)
-
-<hr>
-
-# Prepare Postgres
-
-Run Postgres and load data as shown in the videos
-We'll use the green taxi trips from January 2019:
-
-```wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-01.csv.gz```
-
-You will also need the dataset with zones:
-
-```wget https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv```
-
-Download this data and put it into Postgres (with jupyter notebooks or with a pipeline)
-
-<hr>
-
-## Question 3. Count records 
-
-How many taxi trips were totally made on January 15?
-
-Tip: started and finished on 2019-01-15. 
-
-Remember that `lpep_pickup_datetime` and `lpep_dropoff_datetime` columns are in the format timestamp (date and hour+min+sec) and not in date.
-
-- 20689
-- 20530
-- 17630
-- 21090
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 3. Solution </h2>
-
-How many taxi trips were totally made on January 15?
-
-- `20530`
+> [!TIP]
+> As assumption: I used `lpep_dropoff_datetime` as the date column which makes more accure results than `lpep_pickup_datetime` .
 
 ```sql
-SELECT COUNT(1) FROM public.green_taxi_trip WHERE lpep_pickup_datetime::DATE = DATE '2019-1-15' AND lpep_dropoff_datetime::DATE = DATE '2019-1-15';
+-- running just the second question query which differentiate the answers
+SELECT COUNT(*)
+FROM public.green_taxi_trip
+WHERE lpep_dropoff_datetime >= '2019-10-01 00:00:00'
+  AND lpep_dropoff_datetime < '2019-11-01 00:00:00'
+  AND trip_distance > 1
+  AND trip_distance <= 3;
 ```
 
-![docker build --help](./images/question3.png)
-
-<hr>
+**Solution :** `104,802; 198,924; 109,603; 27,678; 35,189`
 
 ## Question 4. Largest trip for each day
-
-Which was the day with the largest trip distance
-Use the pick up time for your calculations.
-
-- 2019-01-18
-- 2019-01-28
-- 2019-01-15
-- 2019-01-10
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 4. Solution </h2>
-
-Which was the day with the largest trip distance
-Use the pick up time for your calculations.
-
-- `2019-01-15`
 
 ```sql
 SELECT lpep_pickup_datetime::DATE FROM public.green_taxi_trip WHERE trip_distance = (SELECT MAX(trip_distance) FROM public.green_taxi_trip);
 ```
+**Solution :** `2019-01-31`
 
-![docker build --help](./images/question4.png)
-
-<hr>
-
-## Question 5. The number of passengers
-
-In 2019-01-01 how many trips had 2 and 3 passengers?
- 
-- 2: 1282 ; 3: 266
-- 2: 1532 ; 3: 126
-- 2: 1282 ; 3: 254
-- 2: 1282 ; 3: 274
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 5. Solution </h2>
-
-In 2019-01-01 how many trips had 2 and 3 passengers?
-
-- `2: 1282 ; 3: 254`
-
+## Question 5. Three biggest pickup zones
 
 ```sql
-SELECT COUNT(*), passenger_count FROM public.green_taxi_trip WHERE lpep_pickup_datetime::DATE = DATE '2019-1-1' AND (passenger_count = 2 OR passenger_count = 3) GROUP BY passenger_count;
+SELECT zone_item.zone
+FROM zone AS zone_item
+join (
+	SELECT pulocation_id
+	FROM green_taxi_trip
+	WHERE DATE(lpep_pickup_datetime) = '2019-10-18'
+	GROUP BY pulocation_id
+	HAVING SUM(total_amount) > 13000
+	ORDER BY SUM(total_amount) DESC
+) AS tops ON zone_item.location_id = tops.pulocation_id
 ```
 
-![docker build --help](./images/question5.png)
-
-<hr>
+**Solution :** `East Harlem North, East Harlem South, Morningside Heights`
 
 ## Question 6. Largest tip
 
-For the passengers picked up in the Astoria Zone which was the drop off zone that had the largest tip?
-We want the name of the zone, not the id.
-
-Note: it's not a typo, it's `tip` , not `trip`
-
-- Central Park
-- Jamaica
-- South Ozone Park
-- Long Island City/Queens Plaza
-
-<h2 style="color: #0EF; font-weight: bold; text-decoration: underline;"> Question 6. Solution </h2>
-
-For the passengers picked up in the Astoria Zone which was the drop off zone that had the largest tip?
-
-- `Long Island City/Queens Plaza`
-
-
 ```sql
-SELECT t.tip_amount, t.dolocation_id, zdo.zone FROM public.green_taxi_trip t INNER JOIN public.zone zpu ON t.pulocation_id = zpu.location_id AND zpu.zone = 'Astoria' INNER JOIN public.zone zdo ON t.dolocation_id = zdo.location_id ORDER BY t.tip_amount DESC LIMIT(1);
+SELECT t.tip_amount, t.dolocation_id, zdo.zone 
+FROM public.green_taxi_trip t 
+JOIN public.zone zpu ON t.pulocation_id = zpu.location_id 
+JOIN public.zone zdo ON t.dolocation_id = zdo.location_id 
+WHERE zpu.zone LIKE '%East Harlem North%' 
+ORDER BY t.tip_amount DESC 
+LIMIT(1);
 ```
 
-![docker build --help](./images/question6.png)
+**Solutiion :** `JFK Airport`
+
+## Question 7. Terraform Workflow
+
+**Solution :** `terraform init, terraform apply -auto-approve, terraform destroy`
 

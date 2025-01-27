@@ -8,7 +8,7 @@ services:
         volumes:
             - "$HOME/postgres_database_infra:/var/lib/postgresql/data:rw"
         ports:
-            - "5432:5432"
+            - "5433:5432"
         restart: always
     
     pgadmin:
