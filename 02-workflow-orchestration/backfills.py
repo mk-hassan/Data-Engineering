@@ -1,7 +1,4 @@
 import logging
-from datetime import datetime
-from enum import Enum
-from typing import List, Tuple
 
 from workflow import TaxiColor, etl_process
 

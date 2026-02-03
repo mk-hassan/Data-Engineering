@@ -1,7 +1,6 @@
 import os
 from enum import Enum
 
-from prefect.logging import get_run_logger
 from prefect import flow, task
 from prefect_sqlalchemy import SqlAlchemyConnector
 
