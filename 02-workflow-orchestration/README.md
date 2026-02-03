@@ -9,12 +9,16 @@
 
 ## Overview
 
-This module extends existing data pipelines to include NYC taxi data for the year 2021 (January through July). The solution implements ETL workflows using **Prefect** as the orchestration tool, processing both **Yellow** and **Green** taxi datasets.
+This module extends existing data pipelines to process NYC taxi data covering:
+- **2020:** All months (01-12) for baseline analysis
+- **2021:** January through July (01-07) for extending the dataset
+
+The solution implements ETL workflows using **Prefect** as the orchestration tool, processing both **Yellow** and **Green** taxi datasets.
 
 ### Key Features
 
 - ✅ Complete ETL pipeline orchestration using Prefect
-- ✅ Backfill functionality for historical data (01/2021 - 07/2021)
+- ✅ Backfill functionality for historical data (2020 full year + 01/2021 - 07/2021)
 - ✅ Support for both Yellow and Green taxi datasets
 - ✅ Database schema creation and data population
 - ✅ Comprehensive error handling and logging
@@ -100,10 +104,13 @@ The `backfills.py` script provides backfilling for historical data:
 
 ### Features
 
-- **Date Range:** January 2021 - July 2021 (7 months each for green and yellow taxis)
+- **Date Range:** 
+  - 2020: January - December (12 months each for green and yellow taxis)
+  - 2021: January - July (7 months each for green and yellow taxis)
+  - **Total:** 19 months × 2 colors = 38 individual ETL runs
 - **Error Handling:** Individual month failures don't stop the pipeline
 - **Logging:** Descriptive logs with timestamps and status indicators
-- **Reporting:** Comprehensive pass/fail report with success rates
+- **Reporting:** Comprehensive pass/fail report with success rates and failure details
 
 ### Usage
 
@@ -117,14 +124,20 @@ uv run backfills.py
 
 ### Assignment
 
-**Objective:** Extend existing flows to include NYC taxi data for the year 2021.
+**Objective:** Extend existing flows to include NYC taxi data for 2020 (baseline) and 2021 (extension to July).
+
+**Data Coverage:**
+- **2020:** 12 months (Jan-Dec) for both Yellow and Green taxi data
+- **2021:** 7 months (Jan-Jul) for both Yellow and Green taxi data
+- **Total Records:** 38 monthly loads (12 months × 2 colors) + (7 months × 2 colors) = 38 total ETL runs
 
 #### Solution Approach
 
 - [x] **Option 1 (Implemented):** Leverage backfill functionality using the `backfills.py` script
-  - Processes date range: 2021-01-01 to 2021-07-31
+  - Processes 2020 full year: 2020-01-01 to 2020-12-31
+  - Processes 2021 partial year: 2021-01-01 to 2021-07-31
   - Processes both Yellow and Green taxi datasets
-  - Runs all combinations (7 months × 2 colors = 14 total loads)
+  - Runs all combinations (12 months + 7 months = 19 months × 2 colors = 38 total loads)
 
 - [x] **Option 2 (Implemented):** Loop over combinations using dynamic execution
   - Both backfill script and workflow support parametrized execution
@@ -346,7 +359,6 @@ This solution uses **Prefect** instead of the course's **Kestra** orchestrator:
 - **Assignment Status:** ✅ Completed
 - **Backfill:** ✅ Implemented (01-07/2021 for both colors)
 - **Quiz Answers:** [See homework section above]
-- **Code Repository:** [Link to this repository]
 
 ---
 
