@@ -6,7 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "pandas==2.3.3",
-    "prefect[sqlalchemy]>=3.6.15",
+    "prefect-gcp[bigquery,cloud-storage]>=0.6.16",
+    "prefect[gcp,sqlalchemy]>=3.6.15",
     "psycopg2==2.9.11",
     "pyarrow>=23.0.0",
     "sqlalchemy==2.0.46",
