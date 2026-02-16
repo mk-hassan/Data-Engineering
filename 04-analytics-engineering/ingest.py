@@ -40,21 +40,7 @@ def download_and_convert_files(taxi_type):
             csv_gz_filepath.unlink()
             print(f"Completed {parquet_filename}")
 
-def update_gitignore():
-    gitignore_path = Path(".gitignore")
-
-    # Read existing content or start with empty string
-    content = gitignore_path.read_text() if gitignore_path.exists() else ""
-
-    # Add data/ if not already present
-    if 'data/' not in content:
-        with open(gitignore_path, 'a') as f:
-            f.write('\n# Data directory\ndata/\n' if content else '# Data directory\ndata/\n')
-
 if __name__ == "__main__":
-    # Update .gitignore to exclude data directory
-    update_gitignore()
-
     for taxi_type in ["yellow", "green"]:
         download_and_convert_files(taxi_type)
 
