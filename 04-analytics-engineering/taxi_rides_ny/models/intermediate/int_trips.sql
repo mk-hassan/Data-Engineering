@@ -1,3 +1,11 @@
+{{ config(
+    materialized='table',
+    pre_hook=[
+        "SET memory_limit='1GB'",
+        "SET preserve_insertion_order=false"
+    ]
+) }}
+
 -- Enrich and deduplicate trip data
 -- Demonstrates enrichment and surrogate key generation
 -- Note: Data quality analysis available in analyses/trips_data_quality.sql
