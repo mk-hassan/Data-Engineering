@@ -6,10 +6,8 @@ Given the homework page (raw markdown URL):
 <!-- Replace the URL below with the actual homework page URL -->
 `<HOMEWORK_RAW_URL>`
 
-And using this existing README as a style reference:
-<!-- Replace the path below with the path to any previous README in this workspace -->
-`<REFERENCE_README_PATH>`
-
+And using the attached *.py or *.ipynb file(s) reflecting the code used to solve the problems, along with any relevant data files, your task is to:
+ 
 Generate a complete `README.md` for the homework and save it to the appropriate module folder in this workspace. Follow these rules:
 
 ## Content Rules
