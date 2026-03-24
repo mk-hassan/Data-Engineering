@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "dbt-duckdb>=1.10.0",
     "dlt[duckdb,workspace]>=1.22.2",
+    "kafka-python>=2.3.0",
     "pandas==2.3.3",
     "prefect-gcp[bigquery,cloud-storage]>=0.6.16",
     "prefect[gcp,sqlalchemy]>=3.6.15",
